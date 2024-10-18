@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<body>
+    <!-- Navbar code remains unchanged -->
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                          {{result}}
+                        <div id="result" class="mt-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        
+            if (document.visibilityState === 'visible') {
+                setTimeout(function() {
+                   window.location.href = "{% url 'home' %}";
+                }, 6000);
+            }
+        });
+    </script>
+
+{% endblock %}

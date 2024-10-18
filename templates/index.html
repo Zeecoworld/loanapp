@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<body>
+    <!-- Navbar code remains unchanged -->
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Loan Calculator</h2>
+                        <form id="searchForm" method='POST' action="">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ form.includeTerms.label_tag }}
+                                {{ form.includeTerms }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.excludeTerms.label_tag }}
+                                 {{ form.excludeTerms }}
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-success" id="proceedBtn">Proceed</button>
+                            </div>
+                        </form>
+                        
+                        <div id="result" class="mt-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modified Bootstrap Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirm Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Most customers put down 40% when it comes time to do this project, would you be putting down <b>$<span id="downPaymentAmount"></span></b>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="yesBtn">YES</button>
+                    <button type="button" class="btn btn-danger" id="noBtn">NO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('proceedBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const includeTermsInput = document.getElementById('{{ form.includeTerms.id_for_label }}');
+            const amount = parseFloat(includeTermsInput.value);
+            
+            if (isNaN(amount)) {
+                alert('Please enter a valid amount in the Include Terms field.');
+                return;
+            }
+            
+            const downPayment = amount * 0.4;
+            document.getElementById('downPaymentAmount').textContent = downPayment.toFixed(2);
+            
+            // Show the modal
+            var myModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            myModal.show();
+        });
+
+        // Handle YES button click
+        document.getElementById('yesBtn').addEventListener('click', function() {
+            window.location.href = '{% url "first-yes" %}';
+        });
+
+        // Handle NO button click
+        document.getElementById('noBtn').addEventListener('click', function() {
+            window.location.href = '{% url "first-no" %}';
+        });
+    </script>
+</body>
+{% endblock %}
